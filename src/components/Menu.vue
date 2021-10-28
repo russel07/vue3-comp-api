@@ -8,7 +8,7 @@
       active-text-color="#ffd04b"
       @select="handleSelect"
   >
-    <el-menu-item index="1">Processing Center</el-menu-item>
+    <el-menu-item index="1">Users</el-menu-item>
     <el-sub-menu index="2">
       <template #title>Workspace</template>
       <el-menu-item index="2-1">item one</el-menu-item>
@@ -43,22 +43,6 @@ export default {
       activeIndex,
       handleSelect
     }
-  },
-  /*data() {
-    return {
-      activeIndex: 1
-    }
-  },
-  created: function() {
-    this.setActiveValue();
-  },
-  methods: {
-    handleSelect: function (e) {
-      console.log(e.target.value)
-    },
-    setActiveValue: function (){
-      this.activeIndex = 1;
-    }
-  }*/
+  }
 }
 </script>
