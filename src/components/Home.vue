@@ -1,15 +1,15 @@
 <template>
   <div class="home">
-    <h1>Hello World</h1>
+    <Menu/>
   </div>
 </template>
 
 <script>
-
+import Menu from "./Menu";
 export default {
   name: 'Home',
   components: {
-
+    Menu
   }
 }
 </script>
