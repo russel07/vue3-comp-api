@@ -37,8 +37,6 @@ export default {
       console.log(key, keyPath)
     };
 
-    console.log(activeIndex.value);
-
     return {
       activeIndex,
       handleSelect

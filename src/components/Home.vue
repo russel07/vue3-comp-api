@@ -1,111 +1,78 @@
 <template>
   <Menu/>
-
-    <el-form :model="product" class="demo-form-inline">
-      <el-row>
-        <el-col  :span="16" :offset="4">
-          <el-card class="box-card mt-2">
-            <template #header>
-              <div class="card-header">
-                <span>Create / Edit Product</span>
-              </div>
-            </template>
-
-            <el-row :gutter="20">
-              <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
-                <el-form-item label="Product Tile">
-                  <el-input v-model="product.product_title" placeholder="Product Tile"></el-input>
-                </el-form-item>
-              </el-col>
-
-              <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
-                <el-form-item label="Product Price">
-                  <el-input v-model="product.product_price" placeholder="Product Price"></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="20">
-              <el-col :span="24">
-                <el-input
-                    v-model="product.product_description"
-                    :rows="5"
-                    type="textarea"
-                    placeholder="Product Description"/>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="20">
-              <el-col :span="6" class="mt-2" :offset="10">
-                <el-button v-if="!edit" type="primary" @click="createProduct">Create</el-button>
-                <el-button v-else type="warning" @click="updateProduct">Update</el-button>
-              </el-col>
-            </el-row>
-
-          </el-card>
-        </el-col>
-      </el-row>
-    </el-form>
-
-  <el-row>
-    <el-col  :span="16" :offset="4">
-      <el-card class="box-card mt-2">
-        <template #header>
-          <div class="card-header">
-            <span>User List</span>
-          </div>
-        </template>
-        <el-table
-            :data="
-            tableData.filter(
-              (data) =>
-                !search || data.product_title.toLowerCase().includes(search.toLowerCase())
-            )
-          "
-            style="width: 100%"
-        >
-          <el-table-column label="Title" prop="product_title" />
-          <el-table-column label="Description" prop="product_description" />
-          <el-table-column label="Price" prop="product_price" />
-          <el-table-column align="right">
-            <template #header>
-              <el-input v-model="search" size="mini" placeholder="Type to search" />
-            </template>
-            <template #default="scope">
-              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-              >Edit</el-button
-              >
-              <el-popconfirm
-                  confirm-button-text="OK"
-                  cancel-button-text="No, Thanks"
-                  icon="el-icon-info"
-                  icon-color="red"
-                  title="Are you sure to delete this?"
-                  @confirm="handleDelete(scope.$index, scope.row)"
-              >
-                <template #reference>
-                  <el-button
-                      size="mini"
-                      type="danger">Delete</el-button>
-                </template>
-              </el-popconfirm>
-
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-card>
-    </el-col>
-  </el-row>
+  <add-product v-if="!edit" @add-product="createProduct"></add-product>
+  <edit-product v-else :product="existingProduct" @update-product="updateProduct"></edit-product>
+  <products :products="filteredTableData" @search="handleSearch" @delete-product="handleDelete" @edit-product="handleEdit"></products>
 </template>
 
 <script>
 import Menu from "./Menu";
+import AddProduct from "./AddProduct";
+import Products from "./Products";
+import EditProduct from "./EditProduct";
+
+import { ref, computed } from 'vue';
+
 export default {
   name: 'Home',
   components: {
-    Menu
+    Menu,
+    AddProduct,
+    Products,
+    EditProduct
   },
-  data() {
+  setup(){
+    const edit = ref(false);
+    const search = ref(false)
+    const tableData = ref([]);
+    const existingProduct = ref({});
+
+    tableData.value.push({
+      product_title: 'Test Title',
+      product_description: 'Test description',
+      product_price: '$120'
+    })
+
+    const filteredTableData = computed(function(){
+      return tableData.value.filter(
+          (data) => !search.value || data.product_title.toLowerCase().includes(search.value.toLowerCase())
+      )
+    })
+
+    const createProduct = function(data){
+      tableData.value.push(data);
+    }
+
+    const handleEdit = function(data){
+      edit.value = true;
+      existingProduct.value = data
+    }
+
+    const updateProduct = function(id, row){
+      tableData.value.splice(id,1,row);
+      edit.value = false
+    }
+
+    const handleDelete = function(index) {
+      tableData.value.splice(index,1);
+    }
+
+    const handleSearch = function(query){
+      search.value = query;
+    }
+
+    return {
+      filteredTableData,
+      createProduct,
+      edit,
+      existingProduct,
+      handleEdit,
+      updateProduct,
+      handleDelete,
+      handleSearch
+    }
+  },
+  /*data() {
     return {
       product: {
         product_title: '',
@@ -120,13 +87,7 @@ export default {
   },
   methods: {
     createProduct() {
-      let data = {
-        product_title: this.product.product_title,
-        product_description: this.product.product_description,
-        product_price: this.product.product_price
-      }
-      this.tableData.push(data);
-      this.resetProduct();
+
     },
     updateProduct(){
       let data = {
@@ -154,7 +115,7 @@ export default {
       this.product.product_description = '';
       this.product.product_price = '';
     }
-  },
+  },*/
 }
 </script>
 
