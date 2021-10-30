@@ -36,6 +36,8 @@
           <el-row :gutter="20">
             <el-col :span="6" class="mt-2" :offset="10">
               <el-button type="primary" @click="createProduct">Create</el-button>
+
+              <el-button type="danger" icon="el-icon-remove" circle @click="toggleForm"></el-button>
             </el-col>
           </el-row>
 
@@ -51,12 +53,16 @@
 
   export default {
     name: 'AddProduct',
-    emits: ["add-product"],
+    emits: ["add-product", "toggle-from"],
 
     setup(_, context) {
       const product_title = ref("");
       const product_description = ref("");
       const product_price = ref("");
+
+      function toggleForm(){
+        context.emit("toggle-from", true);
+      }
 
       function createProduct() {
         let data = {
@@ -75,7 +81,8 @@
         product_title,
         product_description,
         product_price,
-        createProduct
+        createProduct,
+        toggleForm
       }
     }
   }

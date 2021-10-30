@@ -4,7 +4,12 @@
       <el-card class="box-card mt-2">
         <template #header>
           <div class="card-header">
-            <span>Product List</span>
+            <el-row>
+              <el-col :md="18"><span>Product List</span></el-col>
+              <el-col :md="6">
+                <el-button class="text-right" size="mini" type="secondary" @click="addFormTrigger">Add New</el-button>
+              </el-col>
+            </el-row>
           </div>
         </template>
         <el-table
@@ -51,10 +56,14 @@
   export default {
     name: 'Products',
     props: ["products"],
-    emits: ["delete-product", "search"],
+    emits: ["add-form", "delete-product", "search"],
 
     setup(_, context) {
       const search = ref('');
+
+      function addFormTrigger(){
+        context.emit("add-form", true);
+      }
 
       function handleEdit(index, row){
         let data = {
@@ -77,6 +86,7 @@
       });
 
       return {
+        addFormTrigger,
         search,
         handleEdit,
         handleDelete
