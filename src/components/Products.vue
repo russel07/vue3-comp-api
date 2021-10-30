@@ -80,9 +80,9 @@
       }
 
       watch(search, function (val) {
-        if(val){
+        if(val !== ''){
           context.emit("search", val);
-        }
+        }else context.emit("search", false);
       });
 
       return {
