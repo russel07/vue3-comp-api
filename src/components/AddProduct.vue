@@ -50,12 +50,14 @@
 <script>
 
   import { ref } from 'vue';
+  import Messages from '../composeables/Messages.js';
 
   export default {
     name: 'AddProduct',
     emits: ["add-product", "toggle-from"],
 
     setup(_, context) {
+      const { success, warning, info, error } = Messages();
       const product_title = ref("");
       const product_description = ref("");
       const product_price = ref("");
@@ -71,6 +73,10 @@
           product_price: product_price.value
         }
         context.emit("add-product", data);
+        success("Lets display this");
+        warning("This is warning messaeg");
+        info("This is info message");
+        error("This is error");
 
         product_title.value = '';
         product_description.value = '';

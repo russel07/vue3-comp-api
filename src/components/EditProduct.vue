@@ -52,11 +52,11 @@
   import { ref } from 'vue';
 
   export default {
-    name: 'AddProduct',
+    name: 'EditProduct',
     props: ["product"],
     emits: ["update-product", "toggle-from"],
 
-    setup(props, context) {
+    setup(props, context) {console.log(props);
       const product_title = ref(props.product.product_title)
       const product_description = ref(props.product.product_description)
       const product_price = ref(props.product.product_price);
